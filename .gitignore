@@ -1,0 +1,40 @@
+# PlatformIO
+.vscode/
+build/
+.pioenvs/
+lib/
+\.pio/
+\*.d
+\*.o
+\*.a
+\*.bin
+\*.elf
+\*.h
+\*.cpp
+\*.ini
+\*.json
+
+# IDE Files
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# OS Files
+.DS_Store
+Thumbs.db
+$RECYCLE.BIN/
+
+# Other Common Artifacts
+*.log
+*.tmp
+*.pid
+*.seed
+*.user
+*.class
+*.jar
+*.war
+*.zip
+*.tar.gz
+*.tar.bz2
