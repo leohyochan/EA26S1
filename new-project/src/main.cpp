@@ -1,25 +1,42 @@
-/**
- * Blink
- *
- * Turns on an LED on for one second, then off for one second, repeatedly.
- */
-#include "Arduino.h"
+#include <Arduino.h>
+#include <Wire.h>
+#include "grove_two_rgb_led_matrix.h"
 
-// Set the LED pin
-#ifndef LED_BUILTIN
-#define LED_BUILTIN 25 // Default for Nano 33 BLE Sense
-#endif
+// Initialize the matrix using our custom local library
+GroveTwoRGBLedMatrixClass matrix;
 
 void setup() {
-  // Initialize LED digital pin as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
+  Wire.begin();
+  Serial.begin(9600);
+  while (!Serial);
+  
+  // Give the internal MCU on the LED Matrix time to boot up
+  delay(2000); 
+  
+  Serial.println("System Ready: Send H (Happy), S (Sad), or A (Angry)");
+  
+  // Flash white for a split second to prove hardware works on startup
+  matrix.displayColorBlock(0xFFFFFF, 500, false); 
 }
 
 void loop() {
-  // Turn the LED on.
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(1000); // Wait for a second.
-  // Turn the LED off.
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(1000); // Wait for a second.
+  if (Serial.available() > 0) {
+    char cmd = Serial.read();
+    
+    // Clear any extra characters (like 'Enter' keys) from the buffer
+    while (Serial.available() > 0) Serial.read(); 
+
+    if (cmd == 'H' || cmd == 'h') {
+      Serial.println("Mood: Happy (Green)");
+      matrix.displayColorBlock(0x00FF00, 0, true); // Green
+    } 
+    else if (cmd == 'S' || cmd == 's') {
+      Serial.println("Mood: Sad (Blue)");
+      matrix.displayColorBlock(0x0000FF, 0, true); // Blue
+    } 
+    else if (cmd == 'A' || cmd == 'a') {
+      Serial.println("Mood: Angry (Red)");
+      matrix.displayColorBlock(0xFF0000, 0, true); // Red
+    }
+  }
 }
